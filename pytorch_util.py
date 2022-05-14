@@ -6,13 +6,16 @@ from PIL import Image
 from torchvision import models
 import dowload_model
 
+PATH = "what_is_that_cloud_ml_model_mai_2022.pt"
+NB_CLASS = 10
+
 # load model
 net = models.resnet18(pretrained=True)
 device = torch.device('cpu')
 num_ftrs = net.fc.in_features
-net.fc = nn.Linear(num_ftrs, 46)
+net.fc = nn.Linear(num_ftrs, NB_CLASS)
 
-PATH = "torch_resnet_model.pt"
+
 
 net.load_state_dict(torch.load(PATH, map_location=device))
 net.eval()

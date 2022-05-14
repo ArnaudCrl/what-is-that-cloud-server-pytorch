@@ -26,15 +26,8 @@ def analyze():
 
 
 def format_response(probs):
-    # classes = ['altocumulus', 'altostratus', 'cirrocumulus', 'cirrostratus', 'cirrus', 'cumulonimbus', 'cumulus',
-    #            'nimbostratus', 'stratocumulus', 'stratus']
-
-
-    classes = ['altocumulus', 'altostratus', 'cirrocumulus', 'cirrostratus', 'cirrus', 'cumulonimbus', 'cumulus', 'nimbostratus', 'stratocumulus', 'stratus',
-               'altocumulu', 'altostratu', 'cirrocumulu', 'cirrostratu', 'cirru', 'cumulonimbu', 'cumulu', 'nimbostratu', 'stratocumulu', 'stratu',
-               'altocumul', 'altostrat', 'cirrocumul', 'cirrostrat', 'cirr', 'cumulonimb', 'cumul', 'nimbostrat', 'stratocumul', 'strat',
-               'altocumu', 'altostra', 'cirrocumu', 'cirrostra', 'cir', 'cumulonim', 'cumu', 'nimbostra', 'stratocumu', 'stra',
-               'ltocumulus', 'ltostratus', 'irrocumulus', 'irrostratus', 'cirrus', 'umulonimbus']
+    classes = ['altocumulus', 'altostratus', 'cirrocumulus', 'cirrostratus', 'cirrus', 'cumulonimbus', 'cumulus',
+               'nimbostratus', 'stratocumulus', 'stratus']
 
     predictions = sorted(zip(classes, map(float, probs)), key=lambda p: p[1], reverse=True)
 
