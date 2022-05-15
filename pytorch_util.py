@@ -6,7 +6,7 @@ from PIL import Image
 from torchvision import models
 import dowload_model
 
-PATH = "what_is_that_cloud_ml_model_mai_2022.pt"
+PATH = "what_is_that_cloud_ml_model.pt"
 NB_CLASS = 10
 
 # load model

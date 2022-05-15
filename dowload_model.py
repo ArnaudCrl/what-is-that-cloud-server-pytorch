@@ -11,6 +11,6 @@ async def download_file(url, dest):
             with open(dest, 'wb') as f: f.write(data)
 
 
-model_file_url = 'https://www.dropbox.com/s/qjo5edcvoaif7mn/torch_resnet_model.pt?dl=1'
-model_file_name = 'what_is_that_cloud_ml_model_mai_2022.pt'
+model_file_url = 'https://www.dropbox.com/s/a74790yltd6qp68/what_is_that_cloud_ml_model.pt?dl=1'
+model_file_name = 'what_is_that_cloud_ml_model.pt'
 asyncio.run(download_file(model_file_url, Path(model_file_name)))
