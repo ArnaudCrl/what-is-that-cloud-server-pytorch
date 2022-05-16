@@ -6,28 +6,33 @@ from PIL import Image
 from torchvision import models
 import dowload_model
 
-PATH = "what_is_that_cloud_ml_model.pt"
 NB_CLASS = 10
 
 # load model
-net = models.resnet18(pretrained=True)
+alexnet = models.alexnet(pretrained=True)
 device = torch.device('cpu')
-num_ftrs = net.fc.in_features
-net.fc = nn.Linear(num_ftrs, NB_CLASS)
+alexnet.classifier[6] = nn.Linear(4096, NB_CLASS)
+alexnet.load_state_dict(torch.load("what_is_that_cloud_alexnet.pt", map_location=device))
+alexnet.eval()
 
+mobilenet = models.mobilenet_v2(pretrained=True)
+device = torch.device('cpu')
+mobilenet.classifier[1] = nn.Linear(mobilenet.last_channel, NB_CLASS)
+mobilenet.load_state_dict(torch.load("what_is_that_cloud_mobilenet_v2.pt", map_location=device))
+mobilenet.eval()
 
-
-net.load_state_dict(torch.load(PATH, map_location=device))
-net.eval()
+squeezenet = models.squeezenet1_0(pretrained=True)
+device = torch.device('cpu')
+squeezenet.classifier[1] = nn.Conv2d(512, NB_CLASS, kernel_size=(1, 1), stride=(1, 1))
+squeezenet.load_state_dict(torch.load("what_is_that_cloud_squeezenet.pt", map_location=device))
+squeezenet.eval()
 
 
 # image -> tensor
 def transform_image(image_bytes):
-    normalize = T.Normalize(mean=[0.5], std=[0.5])
+    normalize = T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     transform = T.Compose([  # T.Grayscale(num_output_channels=1),
         T.Resize((512, 512)),
-        T.RandomHorizontalFlip(),
-        T.RandomPerspective(distortion_scale=0.05, p=0.5),
         T.ToTensor(),
         normalize,
     ])
@@ -38,9 +43,16 @@ def transform_image(image_bytes):
 
 
 # predict
-def get_prediction(image_tensor):
-    # images = image_tensor.reshape(-1, 512 * 512)
-    outputs = net(image_tensor)
-    # max returns (value ,index)
-    # _, predicted = torch.max(outputs.data, 1)
+def get_alexnet_prediction(image_tensor):
+    outputs = alexnet(image_tensor)
+    return outputs
+
+
+def get_mobilenet_prediction(image_tensor):
+    outputs = mobilenet(image_tensor)
+    return outputs
+
+
+def get_squeezenet_prediction(image_tensor):
+    outputs = squeezenet(image_tensor)
     return outputs

@@ -20,9 +20,21 @@ def analyze():
         img_bytes = request.files['file'].read()
         # imgdata = base64.b64decode(img_bytes)
         tensor = transform_image(img_bytes)
-        prediction = get_prediction(tensor)
-        pred_percent = torch.nn.functional.softmax(prediction, dim=1)
-        return format_response(pred_percent.tolist()[0])
+
+        alexnet_prediction = get_alexnet_prediction(tensor)
+        mobilenet_prediction = get_mobilenet_prediction(tensor)
+        squeezenet_prediction = get_squeezenet_prediction(tensor)
+
+        alexnet_pred_percent = torch.nn.functional.softmax(alexnet_prediction, dim=1).tolist()[0]
+        mobilenet_pred_percent = torch.nn.functional.softmax(mobilenet_prediction, dim=1).tolist()[0]
+        squeezenet_pred_percent = torch.nn.functional.softmax(squeezenet_prediction, dim=1).tolist()[0]
+
+        average_percent = []
+        for k in range(10):
+            average = (alexnet_pred_percent[k] + mobilenet_pred_percent[k] + squeezenet_pred_percent[k]) / 3
+            average_percent.append(average)
+
+        return format_response(average_percent)
 
 
 def format_response(probs):
